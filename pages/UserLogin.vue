@@ -11,6 +11,7 @@
       <div v-if="testResult" class="result-display">
         <pre>{{ testResult }}</pre>
       </div>
+      <button @click="goToHome">Go Home</button>
     </div>
   </main>
 </template>
@@ -34,6 +35,9 @@ export default {
     };
   },
   methods: {
+    goToHome() {
+      this.$router.push("/home");
+    },
     handlesignInWithGoogle() {
       const provider = new GoogleAuthProvider();
       const auth = getAuth();
@@ -51,6 +55,7 @@ export default {
 
             if (userDoc.exists()) {
               // Success case - display the user data
+              this.$router.push("/home");
               this.testResult =
                 "User exists: " + JSON.stringify(userDoc.data(), null, 2);
               console.log("User data:", userDoc.data());

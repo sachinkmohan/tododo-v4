@@ -15,7 +15,7 @@ const appStore = useAppStore();
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <UserLogin />
+  <RouterView />
 </template>
 
 <style scoped>
