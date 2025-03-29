@@ -6,6 +6,7 @@
       <button class="login-button" @click="handlesignInWithGoogle">
         Sign in with Google
       </button>
+      <p class="text-h1 bg-green mt-1">Hello</p>
       <!-- Kept the test results display area -->
       <div v-if="testResult" class="result-display">
         <pre>{{ testResult }}</pre>
