@@ -1,10 +1,37 @@
 import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
+import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   return {
-    plugins: [vue()],
+    plugins: [
+      vue(),
+      VitePWA({
+        registerType: "autoUpdate",
+        devOptions: {
+          enabled: true,
+        },
+        manifest: {
+          icons: [
+            {
+              src: "/icons/image-task-512x512.png",
+              sizes: "512x512",
+              type: "image/png",
+            },
+            {
+              src: "/icons/image-task-144x144.png",
+              sizes: "144x144",
+              type: "image/png",
+              purpose: "any",
+            },
+          ],
+        },
+        injectManifest: {
+          globPatterns: ["**/*.{js,css,html}"],
+        },
+      }),
+    ],
     define: {
       "process.env.VITE_FIREBASE_API_KEY": JSON.stringify(
         env.VITE_FIREBASE_API_KEY
