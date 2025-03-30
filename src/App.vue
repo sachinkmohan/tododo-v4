@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import HelloWorld from "./components/HelloWorld.vue";
 import UserLogin from "../pages/UserLogin.vue";
-import { useAppStore } from "../stores/app";
-
-const appStore = useAppStore();
 </script>
 
 <template>
