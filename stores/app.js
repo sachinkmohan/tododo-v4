@@ -3,19 +3,7 @@ import { ref } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "../firebase";
 
-import {
-  collection,
-  query,
-  onSnapshot,
-  doc,
-  updateDoc,
-  deleteDoc,
-  addDoc,
-  setDoc,
-  getDoc,
-  getFirestore,
-  getCountFromServer,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 export const useAppStore = defineStore("app", () => {
   const uid = ref("");

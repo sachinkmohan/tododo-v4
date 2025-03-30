@@ -130,7 +130,7 @@ import HabitTracker from "../components/HabitTracker.vue";
 
 import { db } from "../../firebase";
 import { useAppStore } from "../../stores/app";
-import { mapState, mapActions } from "pinia";
+import { mapActions } from "pinia";
 
 import { getAuth, signOut } from "firebase/auth";
 
@@ -142,7 +142,6 @@ import {
   updateDoc,
   deleteDoc,
   addDoc,
-  getDoc,
 } from "firebase/firestore";
 
 export default {
