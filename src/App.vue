@@ -1,10 +1,4 @@
-<script setup lang="ts">
-import HelloWorld from "./components/HelloWorld.vue";
-import UserLogin from "../pages/UserLogin.vue";
-import { useAppStore } from "../stores/app";
-
-const appStore = useAppStore();
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>
@@ -15,7 +9,7 @@ const appStore = useAppStore();
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <UserLogin />
+  <RouterView />
 </template>
 
 <style scoped>

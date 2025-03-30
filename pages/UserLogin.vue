@@ -1,101 +1,135 @@
 <template>
-  <!-- Removed v-main, v-container, v-row, v-col, v-card, v-card-text in favor of standard HTML -->
-  <main>
+  <!-- Replace v-main with standard div container -->
+  <div class="login-page">
+    <!-- Replace v-container with standard div -->
     <div class="login-container">
-      <!-- Changed v-btn to standard button with custom class -->
-      <button class="login-button" @click="handlesignInWithGoogle">
-        Sign in with Google
-      </button>
-      <p class="text-h1 bg-green mt-1">Hello</p>
-      <!-- Kept the test results display area -->
-      <div v-if="testResult" class="result-display">
-        <pre>{{ testResult }}</pre>
+      <!-- Replace v-row and v-col with standard div -->
+      <div class="login-card">
+        <!-- Replace v-card with standard div -->
+        <div class="card">
+          <!-- Replace v-card-text with standard div -->
+          <div class="card-content">
+            <!-- Replace v-btn with standard button -->
+            <button class="sign-in-button" @click="handlesignInWithGoogle">
+              Sign in with Google
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </main>
+  </div>
 </template>
 
-<script>
-import { db } from "../firebase/index";
+<script setup>
+import { db } from "../firebase";
 import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
   getAdditionalUserInfo,
+  setPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { ref, onMounted } from "vue"; // Added onMounted
+import { useRouter } from "vue-router";
 
-export default {
-  data() {
-    return {
-      userName: null,
-      // Added test result data property to display Firestore results
-      testResult: null,
-    };
-  },
-  methods: {
-    handlesignInWithGoogle() {
-      const provider = new GoogleAuthProvider();
-      const auth = getAuth();
+const router = useRouter();
+const userName = ref(null);
 
-      // Simplified auth flow without persistence
-      signInWithPopup(auth, provider)
-        .then(async (result) => {
-          const user = result.user;
-          const userName = user.displayName.split(" ")[0];
-          this.userName = userName; // Store username for display
+onMounted(() => {
+  const auth = getAuth();
+  auth.onAuthStateChanged((user) => {
+    if (user && router.currentRoute.value.name !== "Home") {
+      router.push({ name: "Home" });
+    }
+  });
+});
 
-          // Test Firestore read operation
-          try {
-            const userDoc = await getDoc(doc(db, "users", userName));
+const handlesignInWithGoogle = () => {
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
 
-            if (userDoc.exists()) {
-              // Success case - display the user data
-              this.testResult =
-                "User exists: " + JSON.stringify(userDoc.data(), null, 2);
-              console.log("User data:", userDoc.data());
-            } else {
-              // User doesn't exist - create minimal test data
-              const userData = {
-                name: userName,
-                uid: user.uid,
-                email: user.email,
-                testTimestamp: new Date().toISOString(),
-              };
-
-              await setDoc(doc(db, "users", userName), userData);
-              this.testResult =
-                "Created new user: " + JSON.stringify(userData, null, 2);
-              console.log("New user created:", userData);
-            }
-          } catch (e) {
-            // Error handling
-            this.testResult = "Error: " + e.message;
-            console.error("Firestore error:", e);
-          }
-        })
-        .catch((error) => {
-          this.testResult = "Auth error: " + error.message;
-          console.error("Auth error:", error);
-        });
-    },
-  },
+  setPersistence(auth, browserLocalPersistence)
+    .then(() => {
+      return signInWithPopup(auth, provider);
+    })
+    .then(async (result) => {
+      const user = result.user;
+      const userName = user.displayName.split(" ")[0];
+      const additionalUserInfo = getAdditionalUserInfo(result);
+      if (additionalUserInfo?.isNewUser) {
+        // user.displayName has two words, only use the first one
+        const userData = {
+          name: userName,
+          uid: user.uid,
+          level: 0,
+          email: user.email,
+          createdAt: user.metadata.createdAt,
+          lastLoginAt: user.metadata.lastLoginAt,
+          todoistKey: "",
+          todoistProjectID: "123",
+          partnerName: "",
+          friendName: "",
+        };
+        // New user, create a new document with score = 0
+        try {
+          await setDoc(doc(db, "users", userName), userData);
+          console.log("Document written with ID: ", userName);
+        } catch (e) {
+          console.log("Error writign document", e);
+        }
+        await setDoc(doc(db, "users", userName), userData);
+      } else {
+        const userDoc = await getDoc(doc(db, "users", userName));
+        if (userDoc.exists()) {
+          console.log("User exists");
+        } else {
+          console.log("User does not exist");
+        }
+      }
+      if (router.currentRoute.value.name !== "Home") {
+        router.push({ name: "Home" });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 </script>
 
 <style scoped>
-.login-container {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+.login-page {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
 }
 
-.login-button {
+.login-container {
   width: 100%;
-  padding: 10px;
-  background-color: #4285f4;
+  padding: 16px;
+}
+
+.login-card {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.card {
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.card-content {
+  padding: 16px;
+}
+
+.sign-in-button {
+  width: 100%;
+  padding: 8px 16px;
+  background-color: blue;
   color: white;
   border: none;
   border-radius: 4px;
@@ -103,16 +137,7 @@ export default {
   font-size: 16px;
 }
 
-.login-button:hover {
-  background-color: #3367d6;
-}
-
-.result-display {
-  margin-top: 20px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #f8f9fa;
-  overflow-x: auto;
+.sign-in-button:hover {
+  background-color: darkblue;
 }
 </style>
