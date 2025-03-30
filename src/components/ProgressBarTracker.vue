@@ -39,12 +39,12 @@
         <v-checkbox
           label="Show All"
           v-model="showAllCategories"
-          @change="handleShowAllChange"
+          @update:model-value="handleShowAllChange"
         />
         <v-radio-group
-          row
+          inline
           v-model="selectedCategories"
-          @change="handleCategoryChange"
+          @update:model-value="handleCategoryChange"
         >
           <v-radio
             v-for="category in categories"
