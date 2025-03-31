@@ -1,65 +1,35 @@
 <template>
   <v-app>
-    <div>
-      <button @click="logout">logout</button>
-      <v-row align="center">
-        <v-col cols="auto">
-          <v-btn color="pink" @click="habitColorManualUpdate()"
-            ><v-icon>mdi-auto-fix</v-icon></v-btn
-          >
-        </v-col>
-        <!-- Show text when the button is clicked -->
-        <v-col align="center">
-          <p
-            v-if="showMagicText"
-            style="background-color: green; color: aliceblue"
-          >
-            Category colors updated!! 🥳
-          </p>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="auto">
-          <v-btn color="pink" @click="confirmReset()"
-            ><v-icon>mdi-restart</v-icon></v-btn
-          >
-        </v-col>
-        <v-col align="center">
-          <p
-            v-if="showResetText"
-            style="background-color: blue; color: aliceblue"
-          >
-            All habits reset!! 🥳
-          </p>
-        </v-col>
-      </v-row>
+    <div class="d-flex justify-space-between align-center">
+      <div class="d-flex ga-2">
+        <v-btn
+          variant="tonal"
+          icon="mdi-auto-fix"
+          @click="habitColorManualUpdate()"
+        ></v-btn>
+        <v-btn
+          variant="tonal"
+          icon="mdi-restart"
+          @click="confirmReset()"
+        ></v-btn>
+      </div>
+      <div>
+        <v-btn variant="tonal" icon="mdi-logout" @click="logout"></v-btn>
+      </div>
     </div>
+
     <div>
-      <v-row no-gutters align="center">
-        <v-checkbox
-          label="Show All"
-          v-model="showAllCategories"
-          @update:model-value="handleShowAllChange"
-        />
-        <v-radio-group
-          inline
-          v-model="selectedCategories"
-          @update:model-value="handleCategoryChange"
-        >
-          <v-radio
-            v-for="category in categories"
-            :key="category"
-            :value="category"
-            :label="category"
-            :class="getCategoryColor(category)"
-            class="ma-1"
-          />
-        </v-radio-group>
-      </v-row>
+      <p v-if="showMagicText" style="background-color: green; color: aliceblue">
+        Category colors updated!! 🥳
+      </p>
+      <p v-if="showResetText" style="background-color: blue; color: aliceblue">
+        All habits reset!! 🥳
+      </p>
     </div>
+
     <!-- show a hide button -->
-    <v-btn class="mb-3" @click="showInputFields = !showInputFields">
-      <v-icon>mdi-eye</v-icon>
+    <v-btn class="my-3" @click="showInputFields = !showInputFields">
+      <v-icon>mdi-plus</v-icon>
     </v-btn>
     <div v-if="showInputFields" class="ma-3">
       <input class="ma-3" v-model="newHabit.title" placeholder="Titel" />
@@ -111,8 +81,33 @@
 
       <v-btn color="blue" @click="addHabit"><v-icon>mdi-plus</v-icon></v-btn>
     </div>
+
     <div>
-      <v-list-item class="ma-2" v-for="habit in filteredHabits" :key="habit.id">
+      <v-row no-gutters align="center">
+        <v-checkbox
+          label="Show All"
+          v-model="showAllCategories"
+          @update:model-value="handleShowAllChange"
+        />
+        <v-radio-group
+          inline
+          v-model="selectedCategories"
+          @update:model-value="handleCategoryChange"
+        >
+          <v-radio
+            v-for="category in categories"
+            :key="category"
+            :value="category"
+            :label="category"
+            :class="getCategoryColor(category)"
+            class="ma-1 text-caption"
+          />
+        </v-radio-group>
+      </v-row>
+    </div>
+
+    <div>
+      <v-list-item v-for="habit in filteredHabits" :key="habit.id">
         <HabitTracker
           :habit="habit"
           @update="updateHabitToDB"
@@ -401,7 +396,7 @@ export default {
         } else if (hoursSinceUpdate > 24) {
           return "yellow";
         } else if (hoursSinceUpdate < 24) {
-          return "light-green";
+          return "#BFEE90";
         }
       } else if (habit.frequency.includes("W")) {
         if (hoursSinceUpdate > 2 * 7 * 24) {
@@ -409,7 +404,7 @@ export default {
         } else if (hoursSinceUpdate > 1 * 7 * 24) {
           return "yellow"; // 1 week
         } else if (hoursSinceUpdate < 24 * 7) {
-          return "light-green";
+          return "#BFEE90";
         }
       }
       return "";
@@ -504,5 +499,9 @@ export default {
 
 .light-blue {
   background-color: lightblue;
+}
+
+:deep(.v-list-item) {
+  padding: 0 !important;
 }
 </style>

@@ -1,64 +1,121 @@
 <template>
-  <div>
-    <v-card :color="habitColor">
-      <v-card-text class="text-subtitle-1">
+  <div class="mb-3">
+    <div
+      :style="{ backgroundColor: habitColor }"
+      class="rounded-lg border pa-2"
+    >
+      <p class="text-subtitle-1 d-flex font-weight-bold">
         {{ habit.title }}
-      </v-card-text>
-      <p class="mb-0">{{ habit.weeklyProgress }}/{{ habit.weeklyTarget }}</p>
-      <p>{{ habit.yearlyProgress }}/{{ yearlyTarget }}</p>
-      <v-progress-circular
-        :value="currentWeekProgress"
-        :total="habit.weeklyTarget"
-        class="mx-1"
-        color="blue"
-        size="50"
-        ><strong
-          >{{ Math.ceil(currentWeekProgress) }}%</strong
-        ></v-progress-circular
-      >
-      <v-progress-circular
-        :value="currentYearProgress"
-        :total="yearlyTarget"
-        color="blue"
-        size="50"
-        ><strong
-          >{{ Math.ceil(currentYearProgress) }}%</strong
-        ></v-progress-circular
-      >
-      <v-btn class="ml-2" @click="updateYesterdayProgress"
-        ><v-icon>mdi-arrow-left-drop-circle-outline</v-icon></v-btn
-      >
-      <v-btn class="ml-2" @click="updateProgress"
-        ><v-icon>mdi-numeric-positive-1</v-icon></v-btn
-      >
-      <v-btn class="ml-2" @click="resetWeeklyProgress"
-        ><v-icon>mdi-numeric-negative-1</v-icon></v-btn
-      >
-      <v-btn class="ml-2" @click="deleteHabit"
-        ><v-icon>mdi-delete</v-icon></v-btn
-      >
-      <v-btn
-        class="ml-2"
-        @click="pauseProgress"
-        :color="habit.completedAt === 'Paused' ? 'green' : 'white'"
-        ><v-icon>mdi-bell-sleep-outline</v-icon></v-btn
-      >
+      </p>
+      <div class="d-flex justify-space-between align-center mb-2">
+        <div class="d-flex">
+          <div>
+            <p class="mb-0">
+              {{ habit.weeklyProgress }}/{{ habit.weeklyTarget }}
+            </p>
+            <v-progress-circular
+              :value="currentWeekProgress"
+              :total="habit.weeklyTarget"
+              class="mx-1"
+              color="black"
+              size="50"
+              ><strong
+                >{{ Math.ceil(currentWeekProgress) }}%</strong
+              ></v-progress-circular
+            >
+          </div>
+          <div>
+            <p>{{ habit.yearlyProgress }}/{{ yearlyTarget }}</p>
 
-      <!-- category as a chip -->
-      <v-chip class="ma-2" color="blue" text-color="white">
-        {{ habit.category }}
-      </v-chip>
-      <!-- frequency as a chip -->
-      <v-chip class="ma-2" color="blue" text-color="white">
-        {{ habit.frequency }}
-      </v-chip>
-      <p>{{ formatCompletedAt }}</p>
-    </v-card>
+            <v-progress-circular
+              :value="currentYearProgress"
+              :total="yearlyTarget"
+              color="black"
+              size="50"
+              ><strong
+                >{{ Math.ceil(currentYearProgress) }}%</strong
+              ></v-progress-circular
+            >
+          </div>
+        </div>
+        <div class="d-flex">
+          <div>
+            <v-btn
+              class="ml-2"
+              size="x-small"
+              variant="tonal"
+              icon="mdi-arrow-left-drop-circle-outline"
+              @click="updateYesterdayProgress"
+            ></v-btn>
+            <v-btn
+              class="ml-2"
+              size="x-small"
+              variant="tonal"
+              icon="mdi-numeric-positive-1"
+              @click="updateProgress"
+            ></v-btn>
+            <v-btn
+              class="ml-2"
+              size="x-small"
+              variant="tonal"
+              icon="mdi-dots-vertical"
+              @click="toggleMenu"
+            ></v-btn>
+          </div>
+
+          <div v-if="menuOpen">
+            <v-btn
+              class="ml-2"
+              size="x-small"
+              variant="tonal"
+              icon="mdi-numeric-negative-1"
+              @click="resetWeeklyProgress"
+            ></v-btn>
+            <v-btn
+              class="ml-2"
+              size="x-small"
+              variant="tonal"
+              icon="mdi-delete"
+              @click="deleteHabit"
+            ></v-btn>
+            <v-btn
+              class="ml-2"
+              size="x-small"
+              variant="tonal"
+              @click="pauseProgress"
+              :color="habit.completedAt === 'Paused' ? 'green' : 'white'"
+              icon="mdi-bell-sleep-outline"
+            ></v-btn>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-space-between align-center">
+        <div class="d-flex ga-1">
+          <!-- category as a chip -->
+          <v-chip color="gray">
+            {{ habit.category }}
+          </v-chip>
+          <!-- frequency as a chip -->
+          <v-chip color="gray">
+            {{ habit.frequency }}
+          </v-chip>
+        </div>
+        <div>
+          <p class="text-caption">{{ formatCompletedAt }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      menuOpen: false,
+    };
+  },
   props: {
     habit: {
       type: Object,
@@ -115,6 +172,9 @@ export default {
     },
   },
   methods: {
+    toggleMenu() {
+      this.menuOpen = !this.menuOpen;
+    },
     updateProgress() {
       this.habit.weeklyProgress += 1;
       this.habit.yearlyProgress += 1;
