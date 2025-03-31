@@ -83,16 +83,17 @@
     </div>
 
     <div>
-      <v-row no-gutters align="center">
-        <v-checkbox
-          label="Show All"
-          v-model="showAllCategories"
-          @update:model-value="handleShowAllChange"
-        />
+      <v-checkbox
+        label="Show All"
+        v-model="showAllCategories"
+        @update:model-value="handleShowAllChange"
+      />
+      <div class="category-scroll">
         <v-radio-group
           inline
           v-model="selectedCategories"
           @update:model-value="handleCategoryChange"
+          class="d-flex"
         >
           <v-radio
             v-for="category in categories"
@@ -103,7 +104,7 @@
             class="ma-1 text-caption"
           />
         </v-radio-group>
-      </v-row>
+      </div>
     </div>
 
     <div>
@@ -503,5 +504,15 @@ export default {
 
 :deep(.v-list-item) {
   padding: 0 !important;
+}
+
+.category-scroll {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+:deep(.v-radio-group) {
+  flex-shrink: 0;
 }
 </style>
