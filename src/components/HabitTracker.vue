@@ -38,52 +38,52 @@
             >
           </div>
         </div>
-        <div class="d-flex">
+        <div class="flex-column">
           <div>
             <v-btn
               class="ml-2"
-              size="x-small"
+              size="small"
               variant="tonal"
-              icon="mdi-arrow-left-drop-circle-outline"
+              icon="mdi-history"
               @click="updateYesterdayProgress"
             ></v-btn>
             <v-btn
               class="ml-2"
-              size="x-small"
+              size="small"
               variant="tonal"
-              icon="mdi-numeric-positive-1"
+              icon="mdi-check-decagram"
               @click="updateProgress"
             ></v-btn>
             <v-btn
               class="ml-2"
-              size="x-small"
+              size="small"
               variant="tonal"
               icon="mdi-dots-vertical"
               @click="toggleMenu"
             ></v-btn>
           </div>
 
-          <div v-if="menuOpen">
+          <div v-if="menuOpen" class="mt-1">
             <v-btn
               class="ml-2"
-              size="x-small"
+              size="small"
               variant="tonal"
-              icon="mdi-numeric-negative-1"
+              icon="mdi-undo-variant"
               @click="resetWeeklyProgress"
             ></v-btn>
             <v-btn
               class="ml-2"
-              size="x-small"
+              size="small"
               variant="tonal"
               icon="mdi-delete"
               @click="deleteHabit"
             ></v-btn>
             <v-btn
               class="ml-2"
-              size="x-small"
+              size="small"
               variant="tonal"
               @click="pauseProgress"
-              :color="habit.completedAt === 'Paused' ? 'green' : 'white'"
+              :color="habit.completedAt === 'Paused' ? 'green' : 'black'"
               icon="mdi-bell-sleep-outline"
             ></v-btn>
           </div>
