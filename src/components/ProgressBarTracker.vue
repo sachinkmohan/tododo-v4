@@ -112,7 +112,7 @@
       <v-btn color="blue" @click="addHabit"><v-icon>mdi-plus</v-icon></v-btn>
     </div>
     <div>
-      <v-list-item class="ma-2" v-for="habit in filteredHabits" :key="habit.id">
+      <v-list-item v-for="habit in filteredHabits" :key="habit.id">
         <HabitTracker
           :habit="habit"
           @update="updateHabitToDB"
@@ -401,7 +401,7 @@ export default {
         } else if (hoursSinceUpdate > 24) {
           return "yellow";
         } else if (hoursSinceUpdate < 24) {
-          return "light-green";
+          return "#BFEE90";
         }
       } else if (habit.frequency.includes("W")) {
         if (hoursSinceUpdate > 2 * 7 * 24) {
@@ -409,7 +409,7 @@ export default {
         } else if (hoursSinceUpdate > 1 * 7 * 24) {
           return "yellow"; // 1 week
         } else if (hoursSinceUpdate < 24 * 7) {
-          return "light-green";
+          return "#BFEE90";
         }
       }
       return "";
@@ -504,5 +504,9 @@ export default {
 
 .light-blue {
   background-color: lightblue;
+}
+
+:deep(.v-list-item) {
+  padding: 0 !important;
 }
 </style>
