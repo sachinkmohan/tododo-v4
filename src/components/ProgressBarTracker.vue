@@ -1,39 +1,32 @@
 <template>
   <v-app>
-    <div>
-      <button @click="logout">logout</button>
-      <v-row align="center">
-        <v-col cols="auto">
-          <v-btn color="pink" @click="habitColorManualUpdate()"
-            ><v-icon>mdi-auto-fix</v-icon></v-btn
-          >
-        </v-col>
-        <!-- Show text when the button is clicked -->
-        <v-col align="center">
-          <p
-            v-if="showMagicText"
-            style="background-color: green; color: aliceblue"
-          >
-            Category colors updated!! 🥳
-          </p>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="auto">
-          <v-btn color="pink" @click="confirmReset()"
-            ><v-icon>mdi-restart</v-icon></v-btn
-          >
-        </v-col>
-        <v-col align="center">
-          <p
-            v-if="showResetText"
-            style="background-color: blue; color: aliceblue"
-          >
-            All habits reset!! 🥳
-          </p>
-        </v-col>
-      </v-row>
+    <div class="d-flex justify-space-between align-center">
+      <div class="d-flex ga-2">
+        <v-btn
+          variant="tonal"
+          icon="mdi-auto-fix"
+          @click="habitColorManualUpdate()"
+        ></v-btn>
+        <v-btn
+          variant="tonal"
+          icon="mdi-restart"
+          @click="confirmReset()"
+        ></v-btn>
+      </div>
+      <div>
+        <v-btn variant="tonal" icon="mdi-logout" @click="logout"></v-btn>
+      </div>
     </div>
+
+    <div>
+      <p v-if="showMagicText" style="background-color: green; color: aliceblue">
+        Category colors updated!! 🥳
+      </p>
+      <p v-if="showResetText" style="background-color: blue; color: aliceblue">
+        All habits reset!! 🥳
+      </p>
+    </div>
+
     <div>
       <v-row no-gutters align="center">
         <v-checkbox
@@ -52,7 +45,7 @@
             :value="category"
             :label="category"
             :class="getCategoryColor(category)"
-            class="ma-1"
+            class="ma-1 text-caption"
           />
         </v-radio-group>
       </v-row>
