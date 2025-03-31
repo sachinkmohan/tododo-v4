@@ -27,32 +27,9 @@
       </p>
     </div>
 
-    <div>
-      <v-row no-gutters align="center">
-        <v-checkbox
-          label="Show All"
-          v-model="showAllCategories"
-          @update:model-value="handleShowAllChange"
-        />
-        <v-radio-group
-          inline
-          v-model="selectedCategories"
-          @update:model-value="handleCategoryChange"
-        >
-          <v-radio
-            v-for="category in categories"
-            :key="category"
-            :value="category"
-            :label="category"
-            :class="getCategoryColor(category)"
-            class="ma-1 text-caption"
-          />
-        </v-radio-group>
-      </v-row>
-    </div>
     <!-- show a hide button -->
-    <v-btn class="mb-3" @click="showInputFields = !showInputFields">
-      <v-icon>mdi-eye</v-icon>
+    <v-btn class="my-3" @click="showInputFields = !showInputFields">
+      <v-icon>mdi-plus</v-icon>
     </v-btn>
     <div v-if="showInputFields" class="ma-3">
       <input class="ma-3" v-model="newHabit.title" placeholder="Titel" />
@@ -104,6 +81,31 @@
 
       <v-btn color="blue" @click="addHabit"><v-icon>mdi-plus</v-icon></v-btn>
     </div>
+
+    <div>
+      <v-row no-gutters align="center">
+        <v-checkbox
+          label="Show All"
+          v-model="showAllCategories"
+          @update:model-value="handleShowAllChange"
+        />
+        <v-radio-group
+          inline
+          v-model="selectedCategories"
+          @update:model-value="handleCategoryChange"
+        >
+          <v-radio
+            v-for="category in categories"
+            :key="category"
+            :value="category"
+            :label="category"
+            :class="getCategoryColor(category)"
+            class="ma-1 text-caption"
+          />
+        </v-radio-group>
+      </v-row>
+    </div>
+
     <div>
       <v-list-item v-for="habit in filteredHabits" :key="habit.id">
         <HabitTracker
