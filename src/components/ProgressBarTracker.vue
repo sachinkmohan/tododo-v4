@@ -197,10 +197,13 @@ export default {
   },
   computed: {
     filteredHabits() {
-      if (this.showAllCategories) return this.habits;
+      if (this.showAllCategories)
+        return this.habits.sort((a, b) => {
+          return new Date(b.completedAt) - new Date(a.completedAt);
+        });
       return this.habits
         .filter((habit) => this.selectedCategories.includes(habit.category))
-        .sort((a, b) => a.title.localeCompare(b.title));
+        .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
     },
   },
   methods: {
