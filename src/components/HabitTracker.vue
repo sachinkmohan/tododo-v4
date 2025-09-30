@@ -235,10 +235,13 @@ export default {
       this.menuOpen = !this.menuOpen;
     },
     updateProgress() {
-      this.habit.weeklyProgress += 1;
-      this.habit.yearlyProgress += 1;
-      this.habit.completedAt = new Date().toISOString();
-      this.$emit("update", this.habit);
+      const updatedHabit = {
+        ...this.habit,
+        weeklyProgress: this.habit.weeklyProgress + 1,
+        yearlyProgress: this.habit.yearlyProgress + 1,
+        completedAt: new Date().toISOString(),
+      };
+      this.$emit("update", updatedHabit);
     },
     updateYesterdayProgress() {
       this.habit.weeklyProgress += 1;
