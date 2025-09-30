@@ -4,8 +4,40 @@
       :style="{ backgroundColor: habitColor }"
       class="rounded-lg border pa-2"
     >
-      <p class="text-subtitle-1 d-flex font-weight-bold">
-        {{ habit.title }}
+      <p class="text-subtitle-1 d-flex font-weight-bold align-center">
+        <template v-if="!isEditing">
+          <span class="flex-grow-1 text-left">{{ habit.title }}</span>
+          <v-btn
+            class="ml-2"
+            size="small"
+            icon="mdi-pencil"
+            @click="editTitle"
+            variant="text"
+          ></v-btn>
+        </template>
+        <template v-else>
+          <input
+            v-model="editableTitle"
+            @keyup.enter="saveTitle"
+            @keyup.esc="cancelEdit"
+            ref="titleInput"
+            class="w-100"
+          /><v-btn
+            class="ml-2"
+            size="small"
+            icon="mdi-check"
+            @click="saveTitle"
+            color="success"
+            variant="tonal"
+          ></v-btn>
+          <v-btn
+            class="ml-2"
+            size="small"
+            icon="mdi-cancel"
+            @click="cancelEdit"
+            variant="tonal"
+          ></v-btn>
+        </template>
       </p>
       <div class="d-flex justify-space-between align-center mb-2">
         <div class="d-flex">
@@ -114,6 +146,8 @@ export default {
   data() {
     return {
       menuOpen: false,
+      isEditing: false,
+      editableTitle: "",
     };
   },
   props: {
@@ -172,14 +206,42 @@ export default {
     },
   },
   methods: {
+    editTitle() {
+      this.editableTitle = this.habit.title;
+      this.isEditing = true;
+      this.$nextTick(() => {
+        this.$refs.titleInput.focus();
+      });
+    },
+    saveTitle() {
+      if (!this.isEditing) return;
+
+      if (this.editableTitle.trim()) {
+        const updatedHabit = {
+          ...this.habit,
+          title: this.editableTitle.trim(),
+        };
+        this.$emit("update", updatedHabit);
+        this.isEditing = false;
+      } else {
+        this.cancelEdit();
+      }
+    },
+    cancelEdit() {
+      this.editableTitle = this.habit.title;
+      this.isEditing = false;
+    },
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
     },
     updateProgress() {
-      this.habit.weeklyProgress += 1;
-      this.habit.yearlyProgress += 1;
-      this.habit.completedAt = new Date().toISOString();
-      this.$emit("update", this.habit);
+      const updatedHabit = {
+        ...this.habit,
+        weeklyProgress: this.habit.weeklyProgress + 1,
+        yearlyProgress: this.habit.yearlyProgress + 1,
+        completedAt: new Date().toISOString(),
+      };
+      this.$emit("update", updatedHabit);
     },
     updateYesterdayProgress() {
       this.habit.weeklyProgress += 1;
